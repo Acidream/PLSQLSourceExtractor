@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<objGroupSettings>
+    <Group name="firstGroup2">
+        <DBObjects>SYS.%</DBObjects>
+        <outFolder>out\sys\</outFolder>
+    </Group>
+</objGroupSettings>

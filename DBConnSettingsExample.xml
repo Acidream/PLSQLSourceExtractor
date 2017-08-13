@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dbConnSettings>
+    <connURL>jdbc:oracle:thin:scott/tiger@myhost:1521:orcl</connURL>
+</dbConnSettings>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<objGroupSettings>
+    <Group name="firstGroup">
+        <DBObjects>abs.iacq_order% abs.fm_%</DBObjects>
+        <outFolder>c:\temp</outFolder>
+    </Group>
+    <Group name="firstGroup2">
+        <DBObjects>abs.iacq_order% abs.fm_%,abs.alalalala</DBObjects>
+        <outFolder>c:\temp</outFolder>
+    </Group>
+</objGroupSettings>

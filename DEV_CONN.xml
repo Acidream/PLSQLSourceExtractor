@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<dbConnSettings>
+    <connURL>jdbc:oracle:thin:abs/qaz@//localhost:1521/orcl</connURL>
+</dbConnSettings>
