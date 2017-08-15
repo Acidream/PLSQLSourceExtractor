@@ -36,7 +36,7 @@ public class SrcExtractor {
                 String like = obj.substring(obj.indexOf('.') + 1);
                 QueryRunner run = new QueryRunner(DBConnSettings.getDataSource());
                 ResultSetHandler<List<OraDbaSource>> h = new BeanListHandler<OraDbaSource>(OraDbaSource.class);
-                List<OraDbaSource> srcLines = run.query("select owner, name, type, line, text, origin_con_id from dba_source where owner=? and name like ? order by owner, name, type desc, line", h, owner, like);
+                List<OraDbaSource> srcLines = run.query("select owner, name, type, line, text from dba_source where owner=? and name like ? order by owner, name, type desc, line", h, owner, like);
                 Map<String, String> fileLines2 = listToString(srcLines);
                 for (String fname : fileLines2.keySet()) {
                     Files.createDirectories(Paths.get(objGrp.getOutFolder()));

@@ -12,7 +12,7 @@ public class OraDbaSource {
     String type;
     Long line;
     String text;
-    Long origin_con_id;
+
 
     public String getOwner() {
         return owner;
@@ -54,13 +54,7 @@ public class OraDbaSource {
         this.text = text;
     }
 
-    public Long getOrigin_con_id() {
-        return origin_con_id;
-    }
 
-    public void setOrigin_con_id(Long origin_con_id) {
-        this.origin_con_id = origin_con_id;
-    }
 
     @Override
     public String toString() {
