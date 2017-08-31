@@ -6,6 +6,8 @@ import org.home.settings.ObjGroupSettings;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * Created by oleg on 2017-08-05.
@@ -22,9 +24,9 @@ public class Main {
 
         DBConnSettings.init(args[0]);
 
-        for (int i = 1; i < args.length; i++) {
-            System.out.println("Processing " + args[i]);
-            ObjGroupSettings ogs = ObjGroupSettings.get(args[i]);
+        if (args[1].equalsIgnoreCase("-NOCONF")) {
+
+            ObjGroupSettings ogs = ObjGroupSettings.getOneGroup(Arrays.stream(args[2].split(",")).map(s -> s.trim()).collect(Collectors.toList()));
             SrcExtractor se = new SrcExtractor(ogs.getGroups());
             try {
                 se.extract();
@@ -32,6 +34,19 @@ public class Main {
                 e.printStackTrace();
             }
 
+
+        } else {
+            for (int i = 1; i < args.length; i++) {
+                System.out.println("Processing " + args[i]);
+                ObjGroupSettings ogs = ObjGroupSettings.get(args[i]);
+                SrcExtractor se = new SrcExtractor(ogs.getGroups());
+                try {
+                    se.extract();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 }

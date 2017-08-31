@@ -17,6 +17,12 @@ public class ObjGroup {
     public ObjGroup() {
     }
 
+    public ObjGroup(String name, String outFolder, List<String> DBObjects) {
+        this.name = name;
+        this.outFolder = outFolder;
+        this.DBObjects = DBObjects;
+    }
+
     public String getName() {
         return name;
     }

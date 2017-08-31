@@ -41,7 +41,7 @@ public class SrcExtractor {
                 for (String fname : fileLines2.keySet()) {
                     Files.createDirectories(Paths.get(objGrp.getOutFolder()));
                     Path path = Paths.get(objGrp.getOutFolder(), fname);
-                    System.out.println("Writing file " + path);
+                    // System.out.println("Writing file " + path);
                     Files.write(path, fileLines2.get(fname).getBytes());
                     files.add(path.toString());
                 }
@@ -52,6 +52,6 @@ public class SrcExtractor {
 
     private static Map<String, String> listToString(List<OraDbaSource> srcLines) {
         Map<String, String> fileLines = srcLines.stream().collect(Collectors.groupingBy(e -> e.owner + "." + e.name + "." + (e.type.equalsIgnoreCase("PACKAGE") ? "_PACKAGE" : e.type), Collectors.mapping(e -> e.getText(), Collectors.joining())));
-        return fileLines.entrySet().stream().collect(Collectors.groupingBy(e -> e.getKey().split("\\.")[1] + ".sql", Collectors.mapping(e -> "CREATE OR REPLACE " + e.getValue() + "\n/\n\n", Collectors.joining())));
+        return fileLines.entrySet().stream().sorted((f1, f2) -> f2.getKey().compareTo(f1.getKey())).collect(Collectors.groupingBy(e -> e.getKey().split("\\.")[1] + ".sql", Collectors.mapping(e -> "CREATE OR REPLACE " + e.getValue() + "\n/\n\n", Collectors.joining())));
     }
 }

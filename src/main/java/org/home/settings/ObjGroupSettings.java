@@ -35,6 +35,11 @@ public class ObjGroupSettings {
         this.groups = groups;
     }
 
+    public static ObjGroupSettings getOneGroup(List<String> objNames) {
+        ObjGroupSettings res = new ObjGroupSettings();
+        res.setGroups(Arrays.asList(new ObjGroup("grp1", "NoConfOut\\", objNames)));
+        return res;
+    }
 
     public static ObjGroupSettings get(String filename) {
         if (instance == null || !instance.filename.equals(filename)) {
