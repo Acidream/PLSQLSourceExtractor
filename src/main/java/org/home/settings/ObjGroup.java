@@ -1,7 +1,8 @@
 package org.home.settings;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,10 +10,15 @@ import java.util.List;
  */
 public class ObjGroup {
 
-    String name;
-    String outFolder;
+    private String name;
+
+    private String outFolder;
+
 
     List<String> DBObjects;
+
+    @XmlTransient
+    List<ObjOwnerAndMask> objOwnerAndMasks = new ArrayList<>();
 
     public ObjGroup() {
     }
@@ -36,17 +42,34 @@ public class ObjGroup {
         return outFolder;
     }
 
+
     public void setOutFolder(String outFolder) {
         this.outFolder = outFolder;
+    }
+
+    public List<ObjOwnerAndMask> getObjOwnerAndMasks() {
+        return objOwnerAndMasks;
+    }
+
+    @XmlList//on init through jaxb this method not called
+    public void setDBObjects(List<String> DBObjects) {
+        this.DBObjects = DBObjects;
+        for (String dbObject : DBObjects) {
+            objOwnerAndMasks.add(ObjOwnerAndMask.fromOwnerDotMask(dbObject));
+        }
+
+
     }
 
     public List<String> getDBObjects() {
         return DBObjects;
     }
 
-    @XmlList
-    public void setDBObjects(List<String> DBObjects) {
-        this.DBObjects = DBObjects;
+    void afterUnmarshal(Unmarshaller u, Object parent) {
+        for (String dbObject : DBObjects) {
+            objOwnerAndMasks.add(ObjOwnerAndMask.fromOwnerDotMask(dbObject));
+        }
+
     }
 }
 
