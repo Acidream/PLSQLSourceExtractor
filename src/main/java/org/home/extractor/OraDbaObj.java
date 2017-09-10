@@ -7,10 +7,15 @@ public class OraDbaObj {
     public OraDbaObj() {
     }
 
-    String owner;
-    String name;
-    String type;
+    private String owner;
+    private String name;
+    private String type;
 
+    public OraDbaObj(String owner, String name, String type) {
+        this.owner = owner;
+        this.name = name;
+        this.type = type;
+    }
 
     public String getOwner() {
         return owner;
@@ -43,7 +48,8 @@ public class OraDbaObj {
                 "owner='" + owner + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
-
                 '}';
     }
+
+
 }

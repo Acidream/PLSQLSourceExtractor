@@ -7,11 +7,11 @@ public class OraDbaSource {
     public OraDbaSource() {
     }
 
-    String owner;
-    String name;
-    String type;
-    Long line;
-    String text;
+    private String owner;
+    private String name;
+    private String type;
+    private Long line;
+    private String text;
 
 
     public String getOwner() {

@@ -1,29 +1,32 @@
-package org.home.settings;
+package org.home.model.MaskGroup;
 
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.*;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by oleg on 2017-07-12.
  */
-public class ObjGroup {
+public class MaskGroup {
 
     private String name;
 
     private String outFolder;
 
 
-    List<String> DBObjects;
+    private List<String> DBObjects;
 
     @XmlTransient
-    List<ObjOwnerAndMask> objOwnerAndMasks = new ArrayList<>();
+    private
+    List<Mask> objMasks = new ArrayList<>();
 
-    public ObjGroup() {
+    public MaskGroup() {
     }
 
-    public ObjGroup(String name, String outFolder, List<String> DBObjects) {
+    public MaskGroup(String name, String outFolder, List<String> DBObjects) {
         this.name = name;
         this.outFolder = outFolder;
         this.DBObjects = DBObjects;
@@ -47,18 +50,17 @@ public class ObjGroup {
         this.outFolder = outFolder;
     }
 
-    public List<ObjOwnerAndMask> getObjOwnerAndMasks() {
-        return objOwnerAndMasks;
+    public List<Mask> getObjMasks() {
+        return objMasks;
     }
+
 
     @XmlList//on init through jaxb this method not called
     public void setDBObjects(List<String> DBObjects) {
         this.DBObjects = DBObjects;
         for (String dbObject : DBObjects) {
-            objOwnerAndMasks.add(ObjOwnerAndMask.fromOwnerDotMask(dbObject));
+            objMasks.add(Mask.fromOwnerDotMask(dbObject));
         }
-
-
     }
 
     public List<String> getDBObjects() {
@@ -67,9 +69,21 @@ public class ObjGroup {
 
     void afterUnmarshal(Unmarshaller u, Object parent) {
         for (String dbObject : DBObjects) {
-            objOwnerAndMasks.add(ObjOwnerAndMask.fromOwnerDotMask(dbObject));
+            objMasks.add(Mask.fromOwnerDotMask(dbObject));
         }
 
     }
+
+    public void saveObjs() throws IOException, SQLException {
+        for (Mask objMask : objMasks) {
+            objMask.loadObjectListFromDB();
+            objMask.loadSources();
+            objMask.saveSources(outFolder);
+        }
+
+
+    }
+
+
 }
 

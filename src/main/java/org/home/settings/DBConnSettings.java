@@ -18,7 +18,7 @@ import java.sql.SQLException;
  */
 @XmlRootElement
 public class DBConnSettings {
-    public DBConnSettings() {
+    private DBConnSettings() {
     }
 
     private static DBConnSettings instance;
@@ -32,7 +32,7 @@ public class DBConnSettings {
     }
 
     @XmlElement()
-    public void setConnURL(String connURL) {
+    private void setConnURL(String connURL) {
         this.connURL = connURL;
     }
 

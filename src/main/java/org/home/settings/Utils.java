@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by oleg on 2017-07-12.
  */
-public class Utils {
+class Utils {
 
     public static String getValueForKey(String key, String line) {
         line = line.trim();

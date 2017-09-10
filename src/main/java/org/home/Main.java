@@ -1,8 +1,8 @@
 package org.home;
 
-import org.home.extractor.SrcExtractor;
+
+import org.home.model.MaskGroup.MaskGroupFileAgg;
 import org.home.settings.DBConnSettings;
-import org.home.settings.ObjGroupSettings;
 import org.home.settings.StartupSettings;
 
 import java.io.IOException;
@@ -14,48 +14,67 @@ import java.util.stream.Collectors;
 /**
  * Created by oleg on 2017-08-05.
  */
-public class Main {
+class Main {
     public static void main(String[] args) throws SQLException {
-        ObjGroupSettings.generateExample();
-        DBConnSettings.generateExample();
 
         StartupSettings.initFromArgs(args);
+        if (StartupSettings.instance.isGenExamples()) {
+            generateExamples();
+            return;
+        }
+
         List<String> argsTail = Arrays.stream(args).filter(a -> !a.startsWith("-") && a.trim().length() != 0).collect(Collectors.toList());
 
-
         if (argsTail.size() == 0)
-            throw new RuntimeException("No input parameters given. First parameter DBConn.xml next parameters ObjectGroups.xml");
+            throw new RuntimeException("No input parameters given. First parameter DBConn.xml other parameters ObjectGroups.xml or comma separated object names in -noconf mode");
         if (argsTail.size() == 1)
-            throw new RuntimeException("Only one input parameter given. First parameter DBConn.xml next parameters ObjectGroups.xml");
+            throw new RuntimeException("Only one input parameter given. First parameter DBConn.xml other parameters ObjectGroups.xml or comma separated object names in -noconf mode");
 
         String connSettingsFile = argsTail.get(0);
         DBConnSettings.init(connSettingsFile);
 
-
         argsTail = argsTail.stream().filter(a -> !a.equals(connSettingsFile)).collect(Collectors.toList());
 
+
         if (StartupSettings.instance.isNoConfig()) {
-            if (argsTail.size() > 1) throw new RuntimeException("Wrong number of parameters given.");
-            ObjGroupSettings ogs = ObjGroupSettings.fromObjNames(Arrays.stream(argsTail.get(0).split(",")).map(s -> s.trim()).collect(Collectors.toList()));
-            SrcExtractor se = new SrcExtractor(ogs.getGroups());
-            try {
-                se.extract();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            saveNoConfig(argsTail);
         } else {
-            for (String objSettingsFile : argsTail) {
-                System.out.println("Processing " + objSettingsFile);
-                ObjGroupSettings ogs = ObjGroupSettings.get(objSettingsFile);
-                SrcExtractor se = new SrcExtractor(ogs.getGroups());
-                try {
-                    se.extract();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            saveUsingConfigFiles(argsTail);
+        }
 
+    }
+
+    private static void saveUsingConfigFiles(List<String> maskGroupFiles) {
+        try {
+            for (String maskGroupsFile : maskGroupFiles) {
+                System.out.println("Processing " + maskGroupsFile);
+                MaskGroupFileAgg ogs = MaskGroupFileAgg.get(maskGroupsFile);
+                ogs.saveObjs();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
+    private static void saveNoConfig(List<String> argsTail) {
+        if (argsTail.size() > 1) throw new RuntimeException("Wrong number of parameters given.");
+        try {
+            MaskGroupFileAgg ogs = MaskGroupFileAgg.fromObjNames(Arrays.stream(argsTail.get(0).split(",")).map(s -> s.trim()).collect(Collectors.toList()));
+            ogs.saveObjs();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    static void generateExamples() {
+        MaskGroupFileAgg.generateExample();
+        DBConnSettings.generateExample();
+    }
+
+
 }
