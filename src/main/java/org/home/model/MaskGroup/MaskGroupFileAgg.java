@@ -1,12 +1,10 @@
 package org.home.model.MaskGroup;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import org.home.settings.ShowAndExitException;
+import org.home.settings.Utils;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -42,48 +40,27 @@ public class MaskGroupFileAgg {
         return res;
     }
 
-    public static MaskGroupFileAgg get(String filename) {
+    public static MaskGroupFileAgg get(String filename) throws ShowAndExitException {
         if (instance == null || !instance.filename.equals(filename)) {
-            JAXBContext jc = null;
-            try {
-                jc = JAXBContext.newInstance(MaskGroupFileAgg.class);
-                Unmarshaller unmarshaller = jc.createUnmarshaller();
-                File xml = new File(filename);
-                instance = (MaskGroupFileAgg) unmarshaller.unmarshal(xml);
-                instance.filename = filename;
-            } catch (JAXBException e) {
-                e.printStackTrace();
-            }
+            instance = Utils.unmarshal(filename, MaskGroupFileAgg.class);
+            instance.filename = filename;
         }
         return instance;
     }
 
-    public static void generateExample() {
+    public static void generateExample() throws ShowAndExitException {
         String filename = "ObjGroupSettingsExample.xml";
-        try {
-            JAXBContext jc = JAXBContext.newInstance(MaskGroupFileAgg.class);
             MaskGroupFileAgg s = new MaskGroupFileAgg();
             MaskGroup gm = new MaskGroup();
-            gm.setOutFolder("c:\\temp");
-            gm.setDBObjects(Arrays.asList("abs.iacq_order%", "abs.fm_%"));
+        gm.setOutFolder("c:\\temp\\book");
+        gm.setDBObjects(Arrays.asList("abs.order%", "abs.book_%"));
             gm.setName("firstGroup");
             MaskGroup gm2 = new MaskGroup();
-            gm2.setOutFolder("c:\\temp");
-            gm2.setDBObjects(Arrays.asList("abs.iacq_order%", "abs.fm_%,abs.alalalala"));
+        gm2.setOutFolder("c:\\temp\\lalala");
+        gm2.setDBObjects(Arrays.asList("abs.order%", "abs.fm_%,abs.alalalala"));
             gm2.setName("firstGroup2");
             s.setGroups(Arrays.asList(gm, gm2));
-            Marshaller marshaller = jc.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            File xml = new File(filename);
-            if (!xml.exists()) {
-                xml.createNewFile();
-                marshaller.marshal(s, xml);
-            }
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Utils.marshal(s, filename, MaskGroupFileAgg.class);
     }
 
 

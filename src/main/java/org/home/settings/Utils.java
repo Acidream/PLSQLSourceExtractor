@@ -1,47 +1,47 @@
 package org.home.settings;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.ArrayList;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
 
 /**
  * Created by oleg on 2017-07-12.
  */
-class Utils {
+public class Utils {
 
-    public static String getValueForKey(String key, String line) {
-        line = line.trim();
-        String lineLC = line.toLowerCase();
-        key = key.toLowerCase();
-        if (lineLC.startsWith(key + "=")) return line.substring((key + "=").length());
-        if (lineLC.startsWith(key + " =")) return line.substring((key + " =").length());
-        return null;
-    }
+    public static <T> T unmarshal(String filename, Class<T> cls) throws ShowAndExitException {
 
-    public static String[] readTextFile(String pathFile) {
-        ArrayList<String> lst = new ArrayList<String>();
-        BufferedReader br = null;
+        T res = null;
+
+        File xml = new File(filename);
+        if (!xml.exists()) throw new ShowAndExitException("File " + filename + " not found");
         try {
-            br = new BufferedReader(new FileReader(pathFile));
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                lst.add(line);
-                line = br.readLine();
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (br != null) br.close();
-            } catch (Exception e) {
-            }
-
+            JAXBContext jc = JAXBContext.newInstance(cls);
+            Unmarshaller unmarshaller = jc.createUnmarshaller();
+            res = (T) unmarshaller.unmarshal(xml);
+        } catch (JAXBException e) {
+            throw new ShowAndExitException("Unmarshalling file " + filename + " as " + cls.getSimpleName() + " file error", e);
         }
+        return res;
 
-        return lst.toArray(new String[lst.size()]);
     }
+
+    public static <T> void marshal(Object o, String filename, Class<T> cls) throws ShowAndExitException {
+        File xml = new File(filename);
+        if (xml.exists()) {
+            System.out.println("Example file already exists. Remove it before generation.");
+            return;
+        }
+        try {
+            JAXBContext jc = JAXBContext.newInstance(DBConnSettings.class);
+            Marshaller marshaller = jc.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(o, xml);
+        } catch (JAXBException e) {
+            throw new ShowAndExitException("Marshalling file to" + filename + " from " + cls.getSimpleName() + " error", e);
+        }
+    }
+
 }

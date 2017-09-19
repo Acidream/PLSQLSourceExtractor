@@ -8,6 +8,7 @@ public class StartupSettings {
     private boolean noConfig = false;
     private boolean addTypeDirectoryOnSave = false;
     private boolean useOldMethod = false;
+    private boolean useOnlyDBASource = false;
     private boolean genExamples = false;
 
     public static StartupSettings instance;
@@ -19,7 +20,10 @@ public class StartupSettings {
             if (arg.equalsIgnoreCase("-NOCONF")) instance.noConfig = true;
             else if (arg.equalsIgnoreCase("-ADDTYPEDIR")) instance.addTypeDirectoryOnSave = true;
             else if (arg.equalsIgnoreCase("-USEOLDMETHOD")) instance.useOldMethod = true;
-            else if (arg.equalsIgnoreCase("-GENEXAMPLES")) instance.genExamples = true;
+            else if (arg.equalsIgnoreCase("-USEONLYDBASOURCE")) {
+                instance.useOldMethod = true;
+                instance.useOldMethod = true;
+            } else if (arg.equalsIgnoreCase("-GENEXAMPLES")) instance.genExamples = true;
             else throw new RuntimeException("Not supported option " + arg);
         }
     }
@@ -39,5 +43,9 @@ public class StartupSettings {
 
     public boolean isGenExamples() {
         return genExamples;
+    }
+
+    public boolean isUseOnlyDBASource() {
+        return useOnlyDBASource;
     }
 }

@@ -52,7 +52,8 @@ public class BaseObj implements Comparable {
     static String PREFIX = "CREATE OR REPLACE ";
 
     public BaseObj setSourceCode(String headerSourceCode, String bodySourceCode) {
-        this.sourceCode = PREFIX + headerSourceCode + "\n/\n\n" + PREFIX + bodySourceCode + "\n/\n";
+        this.sourceCode = PREFIX + headerSourceCode + "\n/\n";
+        if (bodySourceCode != null) this.sourceCode += "\n" + PREFIX + bodySourceCode + "\n/\n";
         return this;
     }
 

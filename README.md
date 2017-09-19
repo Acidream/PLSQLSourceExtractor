@@ -24,4 +24,6 @@ Now it extracts packages, procedures, functions, tables, views in newMethod mode
  -ADDTYPEDIR - adds folder corresponding to type of object to the end of path
  
 
- -USEOLDMETHOD - switches to old extraction method through dba_sources view. By default tool uses DBMS_METADATA. 
+ -USEOLDMETHOD - switches to old extraction method through dba_sources view and object list from dba_objects. By default tool uses DBMS_METADATA. 
+ 
+ -USEONLYDBASOURCE - switches to old extraction method through dba_sources view. Object list acquired through dba_objects too.  

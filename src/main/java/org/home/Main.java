@@ -3,6 +3,7 @@ package org.home;
 
 import org.home.model.MaskGroup.MaskGroupFileAgg;
 import org.home.settings.DBConnSettings;
+import org.home.settings.ShowAndExitException;
 import org.home.settings.StartupSettings;
 
 import java.io.IOException;
@@ -31,17 +32,18 @@ class Main {
             throw new RuntimeException("Only one input parameter given. First parameter DBConn.xml other parameters ObjectGroups.xml or comma separated object names in -noconf mode");
 
         String connSettingsFile = argsTail.get(0);
-        DBConnSettings.init(connSettingsFile);
+        try {
+            DBConnSettings.init(connSettingsFile);
+        } catch (ShowAndExitException e) {
+            e.printMessage();
+        }
 
         argsTail = argsTail.stream().filter(a -> !a.equals(connSettingsFile)).collect(Collectors.toList());
-
-
         if (StartupSettings.instance.isNoConfig()) {
             saveNoConfig(argsTail);
         } else {
             saveUsingConfigFiles(argsTail);
         }
-
     }
 
     private static void saveUsingConfigFiles(List<String> maskGroupFiles) {
@@ -55,6 +57,8 @@ class Main {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ShowAndExitException e) {
+            e.printMessage();
         }
     }
 
@@ -70,11 +74,13 @@ class Main {
         }
     }
 
-
     static void generateExamples() {
-        MaskGroupFileAgg.generateExample();
-        DBConnSettings.generateExample();
+        try {
+            MaskGroupFileAgg.generateExample();
+            DBConnSettings.generateExample();
+        } catch (ShowAndExitException e) {
+            e.printMessage();
+        }
     }
-
 
 }
