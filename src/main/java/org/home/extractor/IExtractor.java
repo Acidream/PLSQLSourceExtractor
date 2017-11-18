@@ -11,7 +11,7 @@ import java.util.List;
 public interface IExtractor {
 
 
-    void init();
+    void init() throws SQLException;
 
     List<BaseObj> extract(List<BaseObj> input) throws SQLException;
 

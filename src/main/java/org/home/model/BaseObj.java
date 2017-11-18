@@ -70,6 +70,10 @@ public class BaseObj implements Comparable {
 
     }
 
+    public boolean isTable() {
+        return type.equalsIgnoreCase("TABLE");
+    }
+
 
     public String getSourceCode() {
         return sourceCode;
