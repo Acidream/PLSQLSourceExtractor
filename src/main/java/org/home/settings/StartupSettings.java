@@ -10,6 +10,8 @@ public class StartupSettings {
     private boolean useOldMethod = false;
     private boolean useOnlyDBASource = false;
     private boolean genExamples = false;
+    private boolean updateAllFiles = false;
+
 
     public static StartupSettings instance;
 
@@ -47,5 +49,10 @@ public class StartupSettings {
 
     public boolean isUseOnlyDBASource() {
         return useOnlyDBASource;
+    }
+
+
+    public boolean isUpdateAllFiles() {
+        return updateAllFiles;
     }
 }

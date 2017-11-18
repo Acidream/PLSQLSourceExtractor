@@ -45,9 +45,9 @@ public class NewExtractor implements IExtractor {
                 OraDbaSource s = run.query(conn, packsql, h);
                 BaseObj bo = new BaseObj(s.getOwner(), s.getName(), s.getType(), s.getText());
                 res.add(bo);
-                System.out.println(baseObj.getName() + " OK");
+                // System.out.println(baseObj.getName() + " OK");
             } catch (Exception e) {
-                System.out.println(baseObj.getName() + " ERROR!");
+                System.out.println(baseObj.getName() + "EXTRACTION ERROR!");
             }
             cnt++;
         }

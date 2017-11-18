@@ -12,11 +12,11 @@ import java.nio.file.Paths;
  */
 public class BaseObj implements Comparable {
 
+    static String PREFIX = "CREATE OR REPLACE ";
     private String owner;
     private String name;
     private String type;
     private String sourceCode;
-
 
     public BaseObj(String owner, String name, String type) {
         this.owner = owner;
@@ -35,7 +35,6 @@ public class BaseObj implements Comparable {
         return name;
     }
 
-
     public String getType() {
         return type;
     }
@@ -49,8 +48,6 @@ public class BaseObj implements Comparable {
         return owner;
     }
 
-    static String PREFIX = "CREATE OR REPLACE ";
-
     public BaseObj setSourceCode(String headerSourceCode, String bodySourceCode) {
         this.sourceCode = PREFIX + headerSourceCode + "\n/\n";
         if (bodySourceCode != null) this.sourceCode += "\n" + PREFIX + bodySourceCode + "\n/\n";
@@ -61,7 +58,16 @@ public class BaseObj implements Comparable {
         Path dir = Paths.get(folder, StartupSettings.instance.isAddTypeDirectoryOnSave() ? getType() : "");
         Files.createDirectories(dir);
         Path path = Paths.get(dir.normalize().toString(), getName() + ".sql");
-        Files.write(path, getSourceCode().getBytes());
+        String src = getSourceCode();
+        System.out.print("File " + path + " ");
+        if (StartupSettings.instance.isUpdateAllFiles() || !Files.exists(path) || !new String(Files.readAllBytes(path)).equals(src)) {
+            Files.write(path, src.getBytes());
+            System.out.println("OK");
+        } else {
+            System.out.println("No changes");
+        }
+
+
     }
 
 
