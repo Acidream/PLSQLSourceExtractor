@@ -2,7 +2,10 @@ package org.home.model;
 
 import org.home.settings.StartupSettings;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -60,8 +63,11 @@ public class BaseObj implements Comparable {
         Path path = Paths.get(dir.normalize().toString(), getName() + ".sql");
         String src = getSourceCode();
         System.out.print("File " + path + " ");
-        if (StartupSettings.instance.isUpdateAllFiles() || !Files.exists(path) || !new String(Files.readAllBytes(path)).equals(src)) {
-            Files.write(path, src.getBytes());
+        if (StartupSettings.instance.isUpdateAllFiles() || !Files.exists(path) || !(new String(Files.readAllBytes(path),StandardCharsets.UTF_8)).equals(src)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+                writer.write(src);
+      }
+ //           Files.write(path, src.getBytes(), Charset.forName("UTF-8").newEncoder());
             System.out.println("OK");
         } else {
             System.out.println("No changes");
