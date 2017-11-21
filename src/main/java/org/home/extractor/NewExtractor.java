@@ -1,6 +1,6 @@
 package org.home.extractor;
 
-import com.sun.deploy.util.StringUtils;
+
 import oracle.sql.CLOB;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -67,14 +67,14 @@ public class NewExtractor implements IExtractor {
                 " WHERE mvc.TABLE_NAME = '%s' AND\n" +
                 "   mvc.owner = '%s' AND\n" +
                 "   length(comments) > 0 AND\n" +
-                "   rownum = 1" +
+                "   rownum = 1 " +
                 "union all " +
-                "SELECT dbms_metadata.get_dependent_ddl ('TRIGGER', 'EMP', 'ABS')\n" +
+                "SELECT dbms_metadata.get_dependent_ddl ('TRIGGER', '%s', '%s')\n" +
                 "  FROM DBA_TRIGGERS mvc\n" +
                 " WHERE mvc.TABLE_NAME = '%s' AND\n" +
                 "   mvc.owner = '%s' AND\n" +
                 "   rownum = 1";
-        query = String.format(query, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner);
+        query = String.format(query, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner);
         List<oracle.sql.CLOB> res = runner.query(conn, query, new ColumnListHandler<oracle.sql.CLOB>(1));
 
         StringBuilder stb = new StringBuilder();
@@ -107,7 +107,7 @@ public class NewExtractor implements IExtractor {
                 // System.out.println(baseObj.getName() + " OK");
             } catch (Exception e) {
                 System.out.println(baseObj.getName() + " EXTRACTION ERROR!");
-                // e.printStackTrace();
+                e.printStackTrace();
             }
             cnt++;
         }
