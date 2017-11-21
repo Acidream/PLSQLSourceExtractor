@@ -62,19 +62,18 @@ public class NewExtractor implements IExtractor {
                 "                     where TABLE_NAME = '%s' and owner='%s'\n" +
                 "                       and CONSTRAINT_TYPE = 'P') \n" +
                 "UNION ALL " +
-                "SELECT dbms_metadata.get_dependent_ddl ('COMMENT', '%s', '%s')\n" +
-                "  FROM DBA_TAB_COMMENTS mvc\n" +
-                " WHERE mvc.TABLE_NAME = '%s' AND\n" +
-                "   mvc.owner = '%s' AND\n" +
-                "   length(comments) > 0 AND\n" +
-                "   rownum = 1 " +
-                "union all " +
+                " SELECT dbms_metadata.get_dependent_ddl ('COMMENT', '%s', '%s')\n" +
+                "                  FROM dual  \n" +
+                "                 WHERE exists (select 1 from DBA_TAB_COMMENTS dtc  where   dtc.TABLE_NAME = '%s' AND dtc.owner = '%s' AND length(dtc.comments) > 0)\n" +
+                "                   or \n" +
+                "                   exists (select 1 from all_col_comments cc  where   cc.TABLE_NAME = '%s' AND cc.owner = '%s' AND length(cc.comments) > 0 ) " +
+                " union all " +
                 "SELECT dbms_metadata.get_dependent_ddl ('TRIGGER', '%s', '%s')\n" +
                 "  FROM DBA_TRIGGERS mvc\n" +
                 " WHERE mvc.TABLE_NAME = '%s' AND\n" +
                 "   mvc.owner = '%s' AND\n" +
                 "   rownum = 1";
-        query = String.format(query, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner);
+        query = String.format(query, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner, parentName, owner);
         List<oracle.sql.CLOB> res = runner.query(conn, query, new ColumnListHandler<oracle.sql.CLOB>(1));
 
         StringBuilder stb = new StringBuilder();
