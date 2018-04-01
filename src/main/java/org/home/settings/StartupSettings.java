@@ -1,10 +1,14 @@
 package org.home.settings;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * Created by oleg on 2017-09-09.
  */
 public class StartupSettings {
 
+    static String charsetPrefix = "-CHARSET_";
     private boolean noConfig = false;
     private boolean addTypeDirectoryOnSave = false;
     private boolean useOldMethod = false;
@@ -12,6 +16,7 @@ public class StartupSettings {
     private boolean genExamples = false;
     private boolean updateAllFiles = false;
 
+    private Charset charset = StandardCharsets.UTF_8;
 
     public static StartupSettings instance;
 
@@ -26,10 +31,16 @@ public class StartupSettings {
                 instance.useOldMethod = true;
                 instance.useOnlyDBASource = true;
             } else if (arg.equalsIgnoreCase("-GENEXAMPLES")) instance.genExamples = true;
+            else if (arg.toUpperCase().startsWith(charsetPrefix)) instance.initCharset(arg);
             else throw new RuntimeException("Not supported option " + arg);
         }
     }
 
+    private void initCharset(String option) {
+        option = option.substring(charsetPrefix.length());
+        charset = Charset.forName(option);
+        System.out.println(charset);
+    }
 
     public boolean isNoConfig() {
         return noConfig;
@@ -49,6 +60,10 @@ public class StartupSettings {
 
     public boolean isUseOnlyDBASource() {
         return useOnlyDBASource;
+    }
+
+    public Charset getCharset() {
+        return charset;
     }
 
 

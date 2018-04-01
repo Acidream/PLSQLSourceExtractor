@@ -63,8 +63,8 @@ public class BaseObj implements Comparable {
         Path path = Paths.get(dir.normalize().toString(), getName() + ".sql");
         String src = getSourceCode();
         System.out.print("File " + path + " ");
-        if (StartupSettings.instance.isUpdateAllFiles() || !Files.exists(path) || !(new String(Files.readAllBytes(path),StandardCharsets.UTF_8)).equals(src)) {
-            try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+        if (StartupSettings.instance.isUpdateAllFiles() || !Files.exists(path) || !(new String(Files.readAllBytes(path),StartupSettings.instance.getCharset())).equals(src)) {
+            try (BufferedWriter writer = Files.newBufferedWriter(path, StartupSettings.instance.getCharset())) {
                 writer.write(src);
       }
  //           Files.write(path, src.getBytes(), Charset.forName("UTF-8").newEncoder());
