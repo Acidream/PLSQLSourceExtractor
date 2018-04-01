@@ -24,7 +24,7 @@ public class StartupSettings {
             else if (arg.equalsIgnoreCase("-USEOLDMETHOD")) instance.useOldMethod = true;
             else if (arg.equalsIgnoreCase("-USEONLYDBASOURCE")) {
                 instance.useOldMethod = true;
-                instance.useOldMethod = true;
+                instance.useOnlyDBASource = true;
             } else if (arg.equalsIgnoreCase("-GENEXAMPLES")) instance.genExamples = true;
             else throw new RuntimeException("Not supported option " + arg);
         }
