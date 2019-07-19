@@ -51,12 +51,12 @@ public class Mask {
     void loadObjectListFromDB() throws SQLException {
         QueryRunner run = new QueryRunner(DBConnSettings.getDataSource());
 
-        ResultSetHandler<List<OraDbaObj>> h = new BeanListHandler<OraDbaObj>(OraDbaObj.class);
+        ResultSetHandler<List<OraDbaObj>> h = new BeanListHandler<>(OraDbaObj.class);
         List<OraDbaObj> oraDbaObjs;
         if (!StartupSettings.instance.isUseOnlyDBASource())
-            oraDbaObjs = run.query("SELECT distinct owner,object_type type,object_name name FROM DBA_OBJECTS where object_type in ('PROCEDURE','FUNCTION','PACKAGE','TABLE','VIEW') and  owner=? and object_name like ? and object_name is not null", h, getOwner(), getMask());
-        else
             oraDbaObjs = run.query("SELECT distinct owner, type,name name FROM DBA_source where type in ('PROCEDURE','FUNCTION','PACKAGE','TABLE','VIEW') and  owner=? and name like ? and name is not null", h, getOwner(), getMask());
+        else
+            oraDbaObjs = run.query("SELECT distinct owner,object_type type,object_name name FROM DBA_OBJECTS where object_type in ('PROCEDURE','FUNCTION','PACKAGE','TABLE','VIEW') and  owner=? and object_name like ? and object_name is not null", h, getOwner(), getMask());
         baseObjs = oraDbaObjs.stream().map(oraDbaObj -> new BaseObj(oraDbaObj.getOwner(), oraDbaObj.getName(), oraDbaObj.getType())).collect(Collectors.toList());
     }
 
