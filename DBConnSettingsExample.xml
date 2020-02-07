@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <dbConnSettings>
-    <connURL>jdbc:oracle:thin:scott/tiger@myhost:1521:orcl</connURL>
+    <connURL>jdbc:oracle:thin:@avschool.avangard.ru:1537:AVSCHOOL</connURL>
 </dbConnSettings>

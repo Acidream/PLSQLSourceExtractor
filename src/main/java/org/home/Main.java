@@ -6,8 +6,15 @@ import org.home.settings.DBConnSettings;
 import org.home.settings.ShowAndExitException;
 import org.home.settings.StartupSettings;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import java.sql.SQLException;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,7 +58,9 @@ class Main {
             for (String maskGroupsFile : maskGroupFiles) {
                 System.out.println("Processing " + maskGroupsFile);
                 MaskGroupFileAgg ogs = MaskGroupFileAgg.get(maskGroupsFile);
-                ogs.saveObjs();
+                List<Path> paths = ogs.loadAndSaveObjs();
+
+                if (StartupSettings.instance.isBeautifyWithDeveloper()) beautify(paths);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,8 +74,9 @@ class Main {
     private static void saveNoConfig(List<String> argsTail) {
         if (argsTail.size() > 1) throw new RuntimeException("Wrong number of parameters given.");
         try {
-            MaskGroupFileAgg ogs = MaskGroupFileAgg.fromObjNames(Arrays.stream(argsTail.get(0).split(",")).map(s -> s.trim()).collect(Collectors.toList()));
-            ogs.saveObjs();
+            MaskGroupFileAgg ogs = MaskGroupFileAgg.fromObjNames(Arrays.stream(argsTail.get(0).toUpperCase().split(",")).map(s -> s.trim()).collect(Collectors.toList()));
+            List<Path> paths = ogs.loadAndSaveObjs();
+            if (StartupSettings.instance.isBeautifyWithDeveloper()) beautify(paths);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -80,6 +90,38 @@ class Main {
             DBConnSettings.generateExample();
         } catch (ShowAndExitException e) {
             e.printMessage();
+        }
+    }
+
+
+    private static void beautify(List<Path> paths) throws IOException {
+        try {
+
+
+            Path filePath = Paths.get("beautify.sql");
+            try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
+                writer.write("SET BEAUTIFIERRULES \"C:/tools/format_avangard.br\""+ "\n");
+
+                for (Path path : paths) {
+                    writer.write("beautify " + path.toAbsolutePath().toString() + "\n");
+                }
+                writer.write("exit application");
+            }
+
+
+            Process p = Runtime.getRuntime().exec(Paths.get("").toAbsolutePath().toString() + "//start_beautifier.bat", null, new File(Paths.get("").toAbsolutePath().toString()));
+            p.waitFor();
+
+
+            for (Path path : paths) {
+                String newNameStr = path.toAbsolutePath().toString();
+                newNameStr = newNameStr.substring(0, newNameStr.lastIndexOf(".")) + ".sql";
+
+                Files.move(path, Paths.get(newNameStr));
+            }
+
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
         }
     }
 

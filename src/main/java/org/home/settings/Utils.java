@@ -16,6 +16,8 @@ import java.sql.SQLException;
  */
 public class Utils {
 
+    public static String LINE_SEPARATOR="\r\n";
+
     public static <T> T unmarshal(String filename, Class<T> cls) throws ShowAndExitException {
 
         T res = null;
@@ -58,7 +60,7 @@ public class Utils {
             String line;
             while (null != (line = br.readLine())) {
                 sb.append(line);
-                sb.append("\n");
+                sb.append(LINE_SEPARATOR);
             }
             br.close();
         } catch (SQLException e) {

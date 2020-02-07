@@ -13,6 +13,7 @@ import org.home.settings.Utils;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -89,7 +90,7 @@ public class NewExtractor implements IExtractor {
 
 
     @Override
-    public List<BaseObj> extract(List<BaseObj> baseObjs) throws SQLException {
+    public List<BaseObj> extract(Collection<BaseObj> baseObjs) throws SQLException {
         int cnt = 0;
         List<BaseObj> res = new ArrayList<>();
 

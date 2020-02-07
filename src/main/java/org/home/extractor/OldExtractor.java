@@ -9,6 +9,7 @@ import org.home.settings.StartupSettings;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,18 +20,15 @@ import java.util.stream.Collectors;
 public class OldExtractor implements IExtractor {
     @Override
     public void init() {
-
     }
 
     private String getSQL(BaseObj b) {
-
-
         return "select owner, name, type, line, text from dba_source where owner='" + b.getOwner() + "' and name = '" + b.getName() + "' ";
     }
 
 
     @Override
-    public List<BaseObj> extract(List<BaseObj> baseObjs) throws SQLException {
+    public List<BaseObj> extract(Collection<BaseObj> baseObjs) throws SQLException {
         int cnt = 0;
         List<BaseObj> pack = new ArrayList<>();
         List<BaseObj> res = new ArrayList<>();

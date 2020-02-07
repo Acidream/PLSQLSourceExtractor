@@ -1,11 +1,14 @@
 package org.home.model.MaskGroup;
 
+import org.home.model.BaseObj;
 import org.home.settings.ShowAndExitException;
 import org.home.settings.Utils;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.IOException;
+import java.nio.file.Path;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,13 +67,25 @@ public class MaskGroupFileAgg {
     }
 
 
-    public void saveObjs() throws IOException, SQLException {
+    public List<Path> loadAndSaveObjs() throws IOException, SQLException {
+        List<Path> paths = new ArrayList<>();
         for (MaskGroup group : groups) {
-            group.saveObjs();
+            paths.addAll( group.loadAndSaveObjs());
         }
-
-
+        return paths;
     }
+
+    public List<BaseObj> getBaseObjs(){
+        List<BaseObj>res =new ArrayList<>();
+        for (MaskGroup group : groups) {
+            res.addAll(group.getBaseObjs());
+        }
+        return res;
+    }
+
+
+
+
 
 
 }

@@ -1,1 +1,1 @@
-java -jar PLSQLSrcExt.jar DEV_CONN.xml Objs1.xml Objs2.xml 
+java -jar target/PLSQLSrcExt.jar DEV_CONN.xml Objs1.xml 

@@ -15,6 +15,9 @@ public class StartupSettings {
     private boolean useOnlyDBASource = false;
     private boolean genExamples = false;
     private boolean updateAllFiles = false;
+    private boolean usePlSqlDeveloperExtensions = false;
+    private boolean beautifyWithDeveloper = false;
+
 
     private Charset charset = StandardCharsets.UTF_8;
 
@@ -27,6 +30,8 @@ public class StartupSettings {
             if (arg.equalsIgnoreCase("-NOCONF")) instance.noConfig = true;
             else if (arg.equalsIgnoreCase("-ADDTYPEDIR")) instance.addTypeDirectoryOnSave = true;
             else if (arg.equalsIgnoreCase("-USEOLDMETHOD")) instance.useOldMethod = true;
+            else if (arg.equalsIgnoreCase("-PLSQLDEVELOPEREXT")) instance.usePlSqlDeveloperExtensions = true;
+            else if (arg.equalsIgnoreCase("-BEAUTIFY_WITH_DEVELOPER")) instance.beautifyWithDeveloper = true;
             else if (arg.equalsIgnoreCase("-USEONLYDBASOURCE")) {
                 instance.useOldMethod = true;
                 instance.useOnlyDBASource = true;
@@ -69,5 +74,13 @@ public class StartupSettings {
 
     public boolean isUpdateAllFiles() {
         return updateAllFiles;
+    }
+
+    public boolean isUsePlSqlDeveloperExtensions() {
+        return usePlSqlDeveloperExtensions;
+    }
+
+    public boolean isBeautifyWithDeveloper() {
+        return beautifyWithDeveloper;
     }
 }

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <objGroupSettings>
     <Group name="firstGroup">
-        <DBObjects>ABS.EMP_ACTIONS ABS.%</DBObjects>
-        <outFolder>out\abs\</outFolder>
-    </Group>
-    <Group name="second group">
-        <DBObjects>ABS.EMP_ACTIONS ABS.%</DBObjects>
-        <outFolder>out\abs2\</outFolder>
+        <DBObjects>ABS.SF_ACCEPT%</DBObjects>
+        <outFolder>out\iacq111\</outFolder>
     </Group>
 </objGroupSettings>
